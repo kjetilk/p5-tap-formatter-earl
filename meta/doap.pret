@@ -6,7 +6,7 @@
 
 `TAP-Formatter-EARL`
    :programming-language "Perl" ;
-   :shortdesc            "a module that does something-or-other";
+   :shortdesc            "Formatting TAP output using the Evaluation and Report Language";
    :homepage             <https://metacpan.org/release/TAP-Formatter-EARL>;
    :download-page        <https://metacpan.org/release/TAP-Formatter-EARL>;
    :bug-database         <https://github.com/kjetilk/p5-tap-formatter-earl/issues>;
@@ -14,11 +14,12 @@
                            :browse <https://github.com/kjetilk/p5-tap-formatter-earl>;
                            prov:has_provenance <http://git2prov.org/git2prov?giturl=https%3A%2F%2Fgithub.com%2Fkjetilk%2Fp5-tap-formatter-earl&serialization=PROV-O#>
                          ];
-#   :support-forum        <irc://irc.perl.org/#perlrdf> ;
+   :support-forum        <irc://irc.perl.org/#perlrdf> ;
    :created              2019-09-26;
-   :license              <http://dev.perl.org/licenses/>;
+   :license              <http://www.opensource.org/licenses/mit-license.php>;
    :maintainer           cpan:KJETILK;
    :security-contact     cpan:KJETILK;
-   :developer            cpan:KJETILK.
+   :developer            cpan:KJETILK;
+   :helper               cpan:KONOBI .
 
 

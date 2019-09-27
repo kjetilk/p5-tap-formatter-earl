@@ -7,6 +7,56 @@ package TAP::Formatter::EARL;
 our $AUTHORITY = 'cpan:KJETILK';
 our $VERSION   = '0.001';
 
+use Moo;
+use Data::Dumper;
+use Carp::Always;
+
+use TAP::Formatter::EARL::Session;
+use Types::Standard qw(ConsumerOf);
+use Types::Namespace qw( NamespaceMap );
+use Attean;
+
+extends qw(
+    TAP::Formatter::Console
+);
+
+has model => (is => 'rw',
+				  isa => ConsumerOf['Attean::API::MutableModel'],
+				  builder => '_build_model');
+
+sub _build_model {
+  my $self = shift;
+  return Attean->temporary_model;
+}
+
+has ns => (
+			  is => "ro",
+			  isa => NamespaceMap,
+			  builder => '_build_ns'
+			 );
+
+
+sub _build_ns {
+  my $self = shift;
+  return URI::NamespaceMap->new( [ 'rdf', 'dct', 'earl' ] );
+}
+
+  
+
+sub open_test {
+  print "OPEN: " . Dumper(\@_);
+  my $self = shift;
+  return TAP::Formatter::EARL::Session->new(model => $self->model,
+														  ns => $self->ns)
+}
+
+sub summary {
+  my $self = shift;
+  my $s = Attean->get_serializer('Turtle')->new(namespaces => $self->ns);
+  open(my $fh, ">-:encoding(UTF-8)");
+  $s->serialize_iter_to_io( $fh, $self->model->get_quads);
+}
+
 1;
 
 __END__
@@ -17,7 +67,7 @@ __END__
 
 =head1 NAME
 
-TAP::Formatter::EARL - a module that does something-or-other
+TAP::Formatter::EARL - Formatting TAP output using the Evaluation and Report Language
 
 =head1 SYNOPSIS
 
@@ -36,10 +86,11 @@ Kjetil Kjernsmo E<lt>kjetilk@cpan.orgE<gt>.
 
 =head1 COPYRIGHT AND LICENCE
 
-This software is copyright (c) 2019 by Kjetil Kjernsmo.
+This software is copyright (c) 2019 by Inrupt Inc
 
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
+This is free software, licensed under:
+
+  The MIT (X11) License
 
 
 =head1 DISCLAIMER OF WARRANTIES
