@@ -32,9 +32,17 @@ sub result {
   my $giri = iri('http://example.org/graph');
   my $ns = $self->ns;
   if ($result->isa('TAP::Parser::Result::Test')) {
-	 print Dumper($result);
 	 my $tiri = iri('http://example.org/test/result/timestamp#test_num_' . $result->number);
 	 $self->model->add_quad(quad($tiri, to_AtteanIRI($ns->rdf->type), to_AtteanIRI($ns->earl->TestResult), $giri));
+	 my $outcome = $result->is_ok ? $ns->earl->passed : $ns->earl->failed;
+	 if ($result->directive) {
+		# Then, the test is either TODO or SKIP, they lack description
+		$outcome = $ns->earl->untested;
+		$self->model->add_quad(quad($tiri, to_AtteanIRI($ns->earl->info), langliteral($result->directive . ': ' . $result->explanation, 'en'), $giri));
+	 } else {
+		$self->model->add_quad(quad($tiri, to_AtteanIRI($ns->dct->title), langliteral($result->description, 'en'), $giri));
+	 }
+	 $self->model->add_quad(quad($tiri, to_AtteanIRI($ns->earl->outcome), to_AtteanIRI($outcome), $giri));
   }
 }
 

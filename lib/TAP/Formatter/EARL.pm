@@ -9,7 +9,6 @@ our $VERSION   = '0.001';
 
 use Moo;
 use Data::Dumper;
-use Carp::Always;
 
 use TAP::Formatter::EARL::Session;
 use Types::Standard qw(ConsumerOf);
@@ -44,7 +43,7 @@ sub _build_ns {
   
 
 sub open_test {
-  print "OPEN: " . Dumper(\@_);
+#  print "OPEN: " . Dumper(\@_);
   my $self = shift;
   return TAP::Formatter::EARL::Session->new(model => $self->model,
 														  ns => $self->ns)
