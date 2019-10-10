@@ -14,7 +14,7 @@ use Types::Standard qw(ConsumerOf);
 use Attean;
 use Attean::RDF;
 use Types::Namespace qw( NamespaceMap );
-use Types::Attean qw(to_AtteanIRI);
+use Types::Attean qw(AtteanIRI to_AtteanIRI);
 
 
 has model => (is => 'ro',
