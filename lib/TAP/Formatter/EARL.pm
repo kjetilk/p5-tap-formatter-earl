@@ -14,6 +14,8 @@ use TAP::Formatter::EARL::Session;
 use Types::Standard qw(ConsumerOf);
 use Types::Namespace qw( NamespaceMap );
 use Attean;
+use Attean::RDF;
+use Types::Attean qw(AtteanIRI to_AtteanIRI);
 
 extends qw(
     TAP::Formatter::Console
@@ -34,19 +36,35 @@ has ns => (
 			  builder => '_build_ns'
 			 );
 
-
 sub _build_ns {
   my $self = shift;
-  return URI::NamespaceMap->new( [ 'rdf', 'dct', 'earl' ] );
+  return URI::NamespaceMap->new( [ 'rdf', 'dct', 'earl', 'doap' ] );
 }
 
-  
+has graph_name => (
+						 is => "rw",
+						 isa => AtteanIRI,
+						 coerce => 1,
+						 default => sub {'http://example.org/graph'});
+
+
 
 sub open_test {
-#  print "OPEN: " . Dumper(\@_);
   my $self = shift;
+  my $giri = $self->graph_name;
+  my $ns = $self->ns;
+  my $siri = iri('http://example.org/test/assertor#this');
+  $self->model->add_quad(quad($siri, to_AtteanIRI($ns->rdf->type), to_AtteanIRI($ns->earl->Software), $giri));
+  $self->model->add_quad(quad($siri, to_AtteanIRI($ns->doap->name), literal(__PACKAGE__), $giri));
+  $self->model->add_quad(quad($siri, to_AtteanIRI($ns->doap->release), blank('rev'), $giri));
+  $self->model->add_quad(quad(blank('rev'), to_AtteanIRI($ns->doap->revision), literal($VERSION), $giri));
+  # TODO: Add rdfs:seeAlso the CPAN doap
+
+
   return TAP::Formatter::EARL::Session->new(model => $self->model,
-														  ns => $self->ns)
+														  ns => $self->ns,
+														  graph_name => $giri
+														 )
 }
 
 sub summary {

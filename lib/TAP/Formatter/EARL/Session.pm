@@ -27,9 +27,16 @@ has ns => (
 			  required => 1,
 			 );
 
+has graph_name => (
+						 is => "rw",
+						 isa => AtteanIRI,
+						 required => 1
+						);
+
+
 sub result {
   my ($self, $result) = @_;
-  my $giri = iri('http://example.org/graph');
+  my $giri = $self->graph_name;
   my $ns = $self->ns;
   if ($result->isa('TAP::Parser::Result::Test')) {
 	 my $tiri = iri('http://example.org/test/result/timestamp#test_num_' . $result->number);
