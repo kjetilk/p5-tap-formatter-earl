@@ -50,18 +50,18 @@ has graph_name => (
 
 
 sub open_test {
-  my $self = shift;
+  my ($self, $script, $parser) = @_;
   my $giri = $self->graph_name;
   my $ns = $self->ns;
-  my $siri = iri('http://example.org/test/assertor#this');
+  my $siri = iri('http://example.org/test/assertor#script-' . $script);
   $self->model->add_quad(quad($siri, to_AtteanIRI($ns->rdf->type), to_AtteanIRI($ns->earl->Software), $giri));
-  $self->model->add_quad(quad($siri, to_AtteanIRI($ns->doap->name), literal(__PACKAGE__), $giri));
-  $self->model->add_quad(quad($siri, to_AtteanIRI($ns->doap->release), blank('rev'), $giri));
-  $self->model->add_quad(quad(blank('rev'), to_AtteanIRI($ns->doap->revision), literal($VERSION), $giri));
-  # TODO: Add rdfs:seeAlso the CPAN doap
-
+  $self->model->add_quad(quad($siri, to_AtteanIRI($ns->doap->name), literal($script), $giri));
+  # TODO: Add richer metadata, pointer to software, with seeAlso
+  #  $self->model->add_quad(quad($siri, to_AtteanIRI($ns->doap->release), blank('rev'), $giri));
+  #  $self->model->add_quad(quad(blank('rev'), to_AtteanIRI($ns->doap->revision), literal($VERSION), $giri));
 
   return TAP::Formatter::EARL::Session->new(model => $self->model,
+														  software_uri => $siri,
 														  ns => $self->ns,
 														  graph_name => $giri
 														 )

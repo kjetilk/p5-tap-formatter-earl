@@ -21,6 +21,15 @@ has model => (is => 'ro',
 				  required => 1,
 				  isa => ConsumerOf['Attean::API::MutableModel']);
 
+
+has software_uri => (
+							is => "ro",
+							isa => AtteanIRI,
+							required => 1
+						);
+
+
+
 has ns => (
 			  is => "ro",
 			  isa => NamespaceMap,
@@ -34,12 +43,18 @@ has graph_name => (
 						);
 
 
+
 sub result {
   my ($self, $result) = @_;
   my $giri = $self->graph_name;
   my $ns = $self->ns;
   if ($result->isa('TAP::Parser::Result::Test')) {
 	 my $tiri = iri('http://example.org/test/result/timestamp#test_num_' . $result->number);
+	 my $airi = iri('http://example.org/test/assertor#test_num_' . $result->number);
+	 $self->model->add_quad(quad($airi, to_AtteanIRI($ns->rdf->type), to_AtteanIRI($ns->earl->Assertion), $giri));
+	 $self->model->add_quad(quad($airi, to_AtteanIRI($ns->earl->assertedBy), $self->software_uri, $giri));
+	 $self->model->add_quad(quad($airi, to_AtteanIRI($ns->earl->result), $tiri, $giri));
+	 # TODO: Subject and test properties are metadata given by test
 	 $self->model->add_quad(quad($tiri, to_AtteanIRI($ns->rdf->type), to_AtteanIRI($ns->earl->TestResult), $giri));
 	 my $outcome = $result->is_ok ? $ns->earl->passed : $ns->earl->failed;
 	 if ($result->directive) {
