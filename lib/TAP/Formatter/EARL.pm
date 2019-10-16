@@ -50,9 +50,26 @@ has graph_name => (
 						 default => sub {'http://example.test/graph'});
 
 foreach my $uri_type (qw(software result assertion)) {
-  has $uri_type . '_prefix' =>   (is => "ro", isa => Namespace,	coerce => 1, required => 1, env_prefix => 'earl' );
+  has $uri_type . '_prefix' => (is => "ro",
+										  isa => Namespace,
+										  coerce => 1,
+										  required => 1,
+										  env_prefix => 'earl',
+										  builder => '_build_' . $uri_type . '_prefix'
+										 );
 }
 
+sub _build_software_prefix {
+  return 'script#';
+}
+
+sub _build_result_prefix {
+  return 'result/';
+}
+
+sub _build_assertion_prefix {
+  return 'assertion#';
+}
 
 
 
