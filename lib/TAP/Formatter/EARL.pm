@@ -59,23 +59,20 @@ has base => (
 				);
 
 
-has test_time => (
+has _test_time => (
 						is => 'ro',
 						isa => DateTime,
 						coerce  => 1,
 						default => sub { return "now" }
 					  );
 
-foreach my $uri_type (qw(software result assertion)) {
-  has $uri_type . '_prefix' => (is => "ro",
-										  isa => Namespace,
-										  coerce => 1,
-										  required => 1,
-										  lazy => 1,
-										  env_prefix => 'earl',
-										  builder => '_build_' . $uri_type . '_prefix'
-										 );
-}
+has [qw(software_prefix result_prefix assertion_prefix)] => (
+																				 is => "lazy",
+																				 isa => Namespace,
+																				 coerce => 1,
+																				 required => 1,
+																				 env_prefix => 'earl'
+																				);
 
 sub _build_software_prefix {
   return 'script#';
@@ -83,12 +80,12 @@ sub _build_software_prefix {
 
 sub _build_result_prefix {
   my $self = shift;
-  return 'result/' . $self->test_time . '#';
+  return 'result/' . $self->_test_time . '#';
 }
 
 sub _build_assertion_prefix {
   my $self = shift;
-  return 'assertion/' . $self->test_time . '#';
+  return 'assertion/' . $self->_test_time . '#';
 }
 
 
@@ -137,6 +134,10 @@ __END__
 TAP::Formatter::EARL - Formatting TAP output using the Evaluation and Report Language
 
 =head1 SYNOPSIS
+
+Use on the command line:
+
+  prove --formatter TAP::Formatter::EARL -l
 
 =head1 DESCRIPTION
 
