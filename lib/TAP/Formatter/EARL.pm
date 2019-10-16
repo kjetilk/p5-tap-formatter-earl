@@ -40,7 +40,7 @@ has ns => (
 
 sub _build_ns {
   my $self = shift;
-  return URI::NamespaceMap->new( [ 'rdf', 'dct', 'earl', 'doap' ] );
+  return URI::NamespaceMap->new( [ 'rdf', 'dc', 'earl', 'doap' ] );
 }
 
 has graph_name => (

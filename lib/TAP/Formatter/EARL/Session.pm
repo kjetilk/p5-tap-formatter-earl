@@ -63,7 +63,7 @@ sub result {
 		$outcome = $ns->earl->untested;
 		$self->model->add_quad(quad($tiri, to_AtteanIRI($ns->earl->info), langliteral($result->directive . ': ' . $result->explanation, 'en'), $giri));
 	 } else {
-		$self->model->add_quad(quad($tiri, to_AtteanIRI($ns->dct->title), langliteral($result->description, 'en'), $giri));
+		$self->model->add_quad(quad($tiri, to_AtteanIRI($ns->dc->title), langliteral($result->description, 'en'), $giri));
 	 }
 	 $self->model->add_quad(quad($tiri, to_AtteanIRI($ns->earl->outcome), to_AtteanIRI($outcome), $giri));
   }
