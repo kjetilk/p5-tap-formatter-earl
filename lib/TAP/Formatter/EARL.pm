@@ -12,10 +12,11 @@ use Data::Dumper;
 
 use TAP::Formatter::EARL::Session;
 use Types::Standard qw(ConsumerOf);
-use Types::Namespace qw( NamespaceMap );
+use Types::Namespace qw( Namespace NamespaceMap );
 use Attean;
 use Attean::RDF;
 use Types::Attean qw(AtteanIRI to_AtteanIRI);
+use MooX::Attribute::ENV;
 
 extends qw(
     TAP::Formatter::Console
@@ -45,7 +46,14 @@ has graph_name => (
 						 is => "rw",
 						 isa => AtteanIRI,
 						 coerce => 1,
-						 default => sub {'http://example.org/graph'});
+						 env_prefix => 'earl',
+						 default => sub {'http://example.test/graph'});
+
+has software_prefix =>   (is => "ro", isa => Namespace,	coerce => 1, required => 1, env_prefix => 'earl' );
+has result_prefix =>     (is => "ro", isa => Namespace,	coerce => 1, required => 1, env_prefix => 'earl' );
+has assertion_prefix =>  (is => "ro", isa => Namespace,	coerce => 1, required => 1, env_prefix => 'earl' );
+
+
 
 
 
@@ -53,7 +61,7 @@ sub open_test {
   my ($self, $script, $parser) = @_;
   my $giri = $self->graph_name;
   my $ns = $self->ns;
-  my $siri = iri('http://example.org/test/assertor#script-' . $script);
+  my $siri = to_AtteanIRI($self->software_prefix->iri('script-' . $script));
   $self->model->add_quad(quad($siri, to_AtteanIRI($ns->rdf->type), to_AtteanIRI($ns->earl->Software), $giri));
   $self->model->add_quad(quad($siri, to_AtteanIRI($ns->doap->name), literal($script), $giri));
   # TODO: Add richer metadata, pointer to software, with seeAlso

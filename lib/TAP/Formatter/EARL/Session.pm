@@ -13,7 +13,7 @@ use Data::Dumper;
 use Types::Standard qw(ConsumerOf);
 use Attean;
 use Attean::RDF;
-use Types::Namespace qw( NamespaceMap );
+use Types::Namespace qw( Namespace NamespaceMap );
 use Types::Attean qw(AtteanIRI to_AtteanIRI);
 
 
@@ -42,15 +42,16 @@ has graph_name => (
 						 required => 1
 						);
 
-
+has result_prefix =>     (is => "ro", isa => Namespace,	coerce => 1, required => 1 );
+has assertion_prefix =>  (is => "ro", isa => Namespace,	coerce => 1, required => 1 );
 
 sub result {
   my ($self, $result) = @_;
   my $giri = $self->graph_name;
   my $ns = $self->ns;
   if ($result->isa('TAP::Parser::Result::Test')) {
-	 my $tiri = iri('http://example.org/test/result/timestamp#test_num_' . $result->number);
-	 my $airi = iri('http://example.org/test/assertor#test_num_' . $result->number);
+	 my $tiri = to_AtteanIRI($self->result_prefix->iri('timestamp#test_num_' . $result->number));
+	 my $airi = to_AtteanIRI($self->assertion_prefix->iri('test_num_' . $result->number));
 	 $self->model->add_quad(quad($airi, to_AtteanIRI($ns->rdf->type), to_AtteanIRI($ns->earl->Assertion), $giri));
 	 $self->model->add_quad(quad($airi, to_AtteanIRI($ns->earl->assertedBy), $self->software_uri, $giri));
 	 $self->model->add_quad(quad($airi, to_AtteanIRI($ns->earl->result), $tiri, $giri));
