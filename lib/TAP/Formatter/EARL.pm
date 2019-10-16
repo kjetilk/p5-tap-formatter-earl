@@ -49,9 +49,9 @@ has graph_name => (
 						 env_prefix => 'earl',
 						 default => sub {'http://example.test/graph'});
 
-has software_prefix =>   (is => "ro", isa => Namespace,	coerce => 1, required => 1, env_prefix => 'earl' );
-has result_prefix =>     (is => "ro", isa => Namespace,	coerce => 1, required => 1, env_prefix => 'earl' );
-has assertion_prefix =>  (is => "ro", isa => Namespace,	coerce => 1, required => 1, env_prefix => 'earl' );
+foreach my $uri_type (qw(software result assertion)) {
+  has $uri_type . '_prefix' =>   (is => "ro", isa => Namespace,	coerce => 1, required => 1, env_prefix => 'earl' );
+}
 
 
 
