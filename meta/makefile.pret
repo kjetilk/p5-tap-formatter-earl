@@ -4,6 +4,15 @@
 
 `TAP-Formatter-EARL`
 	:test-requirement       [ :on "Test::More 0.96"^^:CpanId ];
+	:runtime-requirement    [ :on "TAP::Formatter::Console"^^:CpanId ];
+	:runtime-requirement    [ :on "perl 5.014"^^:CpanId ];
+	:runtime-requirement    [ :on "Moo"^^:CpanId ];
+	:runtime-requirement    [ :on "Attean 0.24"^^:CpanId ];
+	:runtime-requirement    [ :on "Types::Standard"^^:CpanId ];
+	:runtime-requirement    [ :on "URI::NamespaceMap"^^:CpanId ];
+	:runtime-requirement    [ :on "RDF::NS::Curated 1.002"^^:CpanId ];
+	:runtime-requirement    [ :on "Types::DateTime"^^:CpanId ];
+	:runtime-requirement    [ :on "MooX::Attribute::ENV"^^:CpanId ];
 	:develop-recommendation [ :on "Dist::Inkt 0.001"^^:CpanId ];
 	.
 
