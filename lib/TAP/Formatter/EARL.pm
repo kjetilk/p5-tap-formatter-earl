@@ -50,6 +50,15 @@ has graph_name => (
 						 env_prefix => 'earl',
 						 default => sub {'http://example.test/graph'});
 
+has base => (
+				 is => "rw",
+				 isa => AtteanIRI,
+				 coerce => 1,
+				 predicate => 'has_base',
+				 env_prefix => 'earl'
+				);
+
+
 has test_time => (
 						is => 'ro',
 						isa => DateTime,
@@ -109,6 +118,9 @@ sub summary {
   my $self = shift;
   my $s = Attean->get_serializer('Turtle')->new(namespaces => $self->ns);
   open(my $fh, ">-:encoding(UTF-8)");
+  if ($self->has_base) {
+	 print $fh '@base <' . $self->base->as_string . "> .\n"; # TODO, the URLs are probably not interpreted as relative
+  }
   $s->serialize_iter_to_io( $fh, $self->model->get_quads);
 }
 
