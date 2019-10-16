@@ -70,6 +70,8 @@ sub open_test {
 
   return TAP::Formatter::EARL::Session->new(model => $self->model,
 														  software_uri => $siri,
+														  result_prefix => $self->result_prefix,
+														  assertion_prefix => $self->assertion_prefix,
 														  ns => $self->ns,
 														  graph_name => $giri
 														 )
