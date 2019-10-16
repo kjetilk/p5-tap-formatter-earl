@@ -17,6 +17,7 @@ use Attean;
 use Attean::RDF;
 use Types::Attean qw(AtteanIRI to_AtteanIRI);
 use MooX::Attribute::ENV;
+use Types::DateTime -all;
 
 extends qw(
     TAP::Formatter::Console
@@ -49,11 +50,19 @@ has graph_name => (
 						 env_prefix => 'earl',
 						 default => sub {'http://example.test/graph'});
 
+has test_time => (
+						is => 'ro',
+						isa => DateTime,
+						coerce  => 1,
+						default => sub { return "now" }
+					  );
+
 foreach my $uri_type (qw(software result assertion)) {
   has $uri_type . '_prefix' => (is => "ro",
 										  isa => Namespace,
 										  coerce => 1,
 										  required => 1,
+										  lazy => 1,
 										  env_prefix => 'earl',
 										  builder => '_build_' . $uri_type . '_prefix'
 										 );
@@ -64,11 +73,13 @@ sub _build_software_prefix {
 }
 
 sub _build_result_prefix {
-  return 'result/';
+  my $self = shift;
+  return 'result/' . $self->test_time . '#';
 }
 
 sub _build_assertion_prefix {
-  return 'assertion#';
+  my $self = shift;
+  return 'assertion/' . $self->test_time . '#';
 }
 
 

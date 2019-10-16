@@ -50,7 +50,7 @@ sub result {
   my $giri = $self->graph_name;
   my $ns = $self->ns;
   if ($result->isa('TAP::Parser::Result::Test')) {
-	 my $tiri = to_AtteanIRI($self->result_prefix->iri('timestamp#test_num_' . $result->number));
+	 my $tiri = to_AtteanIRI($self->result_prefix->iri('test_num_' . $result->number));
 	 my $airi = to_AtteanIRI($self->assertion_prefix->iri('test_num_' . $result->number));
 	 $self->model->add_quad(quad($airi, to_AtteanIRI($ns->rdf->type), to_AtteanIRI($ns->earl->Assertion), $giri));
 	 $self->model->add_quad(quad($airi, to_AtteanIRI($ns->earl->assertedBy), $self->software_uri, $giri));
