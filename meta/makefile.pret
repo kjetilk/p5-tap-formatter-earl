@@ -4,6 +4,7 @@
 
 `TAP-Formatter-EARL`
 	:test-requirement       [ :on "Test::More 0.96"^^:CpanId ];
+	:test-requirement       [ :on "Test::Output"^^:CpanId ];	
 	:runtime-requirement    [ :on "TAP::Formatter::Console"^^:CpanId ];
 	:runtime-requirement    [ :on "perl 5.014"^^:CpanId ];
 	:runtime-requirement    [ :on "Moo"^^:CpanId ];

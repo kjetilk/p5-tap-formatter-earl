@@ -24,6 +24,7 @@ use strict;
 use warnings;
 use Test::Modern;
 use Test::More;
+use Test::Output;
 
 use_ok("TAP::Formatter::EARL");
 
@@ -31,5 +32,12 @@ my $t = object_ok(
 						sub { TAP::Formatter::EARL->new() }, '$t',
 						isa => [qw(TAP::Formatter::Console)],
 						can => [qw(model ns graph_name base _test_time software_prefix result_prefix assertion_prefix open_test summary)]);
+
+my $s = $t->open_test('foobar.t');
+
+isa_ok($s, 'TAP::Formatter::EARL::Session');
+
+
+stdout_like(sub {$t->summary}, qr/doap:name \"foobar\.t\"/, "contains correct script name");
 
 done_testing;
