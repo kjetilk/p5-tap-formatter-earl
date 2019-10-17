@@ -26,6 +26,7 @@ use Test::Modern;
 use Test::More;
 use Attean;
 use Attean::RDF;
+use TAP::Parser::ResultFactory;
 
 use_ok("TAP::Formatter::EARL::Session");
 
@@ -42,5 +43,23 @@ my $s = object_ok(
 
 
 is($s->model->size, 0, 'Model is empty');
+
+my $token = {
+				 'ok' => 'ok',
+				 'description' => '- This is a test',
+				 'directive' => '',
+				 'test_num' => 3,
+				 'type' => 'test',
+				 'explanation' => '',
+				 'raw' =>'ok 3 - This is a test'
+				};
+my $factory = TAP::Parser::ResultFactory->new;
+my $result  = $factory->make_result( $token );
+
+isa_ok($result, 'TAP::Parser::Result::Test');
+
+ok($s->result($result), "RDF is built");
+
+is($s->model->size, 6, 'Model has six triples');
 
 done_testing;

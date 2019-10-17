@@ -66,7 +66,9 @@ sub result {
 		$self->model->add_quad(quad($tiri, to_AtteanIRI($ns->dc->title), langliteral($result->description, 'en'), $giri));
 	 }
 	 $self->model->add_quad(quad($tiri, to_AtteanIRI($ns->earl->outcome), to_AtteanIRI($outcome), $giri));
+	 return 1;
   }
+  return 0;
 }
 
 sub close_test {
