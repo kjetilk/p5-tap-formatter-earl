@@ -88,7 +88,80 @@ TAP::Formatter::EARL::Session - Session implementation for TAP Formatter to EARL
 
 =head1 SYNOPSIS
 
+ use TAP::Formatter::EARL::Session;
+ use Attean;
+ use Attean::RDF;
+ use URI::NamespaceMap;
+
+ TAP::Formatter::EARL::Session->new(
+                                    model            => Attean->temporary_model,
+                                    software_uri     => iri('http://example.org/script'),
+                                    ns               => URI::NamespaceMap->new( [ 'rdf', 'dc', 'earl', 'doap' ] ),
+                                    graph_name       => iri('http://example.org/graph'),
+                                    result_prefix    => URI::Namespace->new('http://example.org/result#'),
+                                    assertion_prefix => URI::Namespace->new('http://example.org/assertion#')
+                                   );
+
 =head1 DESCRIPTION
+
+This defines a session for each individual part of the test
+result. You would probably not call this directly.
+
+
+=head2 Attributes
+
+It has a number of attributes, they are all required.
+
+=over
+
+=item * C<< software_uri >>
+
+An L<Attean::IRI> object that identifies the software itself. This URI
+will typically be minted by L<TAP::Formatter::EARL> and therefore
+passed as to this class as a IRI rather than just a prefix.
+
+=back
+
+The following attributes are passed from L<TAP::Formatter::EARL>, see the documentation there:
+
+=over
+
+=item * C<< model >>
+
+=item * C<< ns >>
+
+=item * C<< graph_name >>
+
+=item * C<< assertion_prefix >>
+
+=item * C<< result_prefix >>
+
+=back
+
+Note that the attributes do not have defaults in this class, but the
+implementation of L<TAP::Formatter::EARL> will pass them on.
+
+
+=head2 Methods
+
+The methods are implementations of methods required by the framework.
+
+=over
+
+=item * C<< result( $result ) >>
+
+A L<TAP::Parser::Result> object will be passed as argument to this
+method, and based on its contents, RDF will be added to the model as a
+side-effect. Will return true if any statements were added, 0
+otherwise. Currently, only subclasses of L<TAP::Parser::Result::Test>
+will be formulated as RDF.
+
+=item * C<< close_test >>
+
+No-op for now.
+
+=back
+
 
 =head1 BUGS
 

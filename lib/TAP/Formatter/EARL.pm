@@ -141,6 +141,90 @@ Use on the command line:
 
 =head1 DESCRIPTION
 
+This is a formatter for TAP-based test results to output them using
+the L<Evaluation and Report
+Language|https://www.w3.org/TR/EARL10-Guide/>, which is a vocabulary
+based on the Resource Description Framework (RDF) to describe test
+results, so that they can be shared, for example as part of an audit.
+
+This module has a number of attributes, but they are all optional, as
+they have reasonable defaults. Many of them can be set using
+environment variables. It further extends L<TAP::Formatter::Console>.
+
+=head2 Attributes
+
+=over
+
+=item * C<< model >>
+
+An L<Attean> mutable model that will contain the generated RDF
+triples. A temporary model is used by default.
+
+=item * C<< ns >>
+
+A L<URI::NamespaceMap> object. This can be used internally in
+programming with prefixes, and to abbreviate using the given prefixes
+in serializations. It is initialized by default with the prefixes used
+internally.
+
+=item * C<< graph_name >>
+
+An L<Attean::IRI> to use as graph name for all triples. In normal
+operations, the formatter will not use the graph name, and so the
+default is set to C<http://example.test/graph>. Normal coercions
+apply.
+
+It can be set using the environment variable C<EARL_GRAPH_NAME>.
+
+=item * C<< base >>
+
+An L<Attean::IRI> to use as the base URI for relative URIs in the
+serialized output. The default is no base. Normal coercions apply.
+
+It can be set using the environment variable C<EARL_BASE>.
+
+=item * C<< software_prefix >>,  C<< assertion_prefix >>, C<< result_prefix >>
+
+Prefixes for URIs of the script running the test, the assertion that a
+certain result has been found, and the result itself, respectively.
+
+They accept a L<URI::Namespace> object. They have relative URIs as
+defaults. These will not be set as a prefix in the serializer. Normal
+coercions apply.
+
+They can be set using environment variables, C<EARL_SOFTWARE_PREFIX>,
+C<EARL_ASSERTION_PREFIX> and C<EARL_RESULT_PREFIX>, respectively.
+
+=back
+
+=head2 Methods
+
+These methods are specialised implementations of methods in the
+superclass L<TAP::Formatter::Base>.
+
+=over
+
+=item * C<< open_test >>
+
+This is called to create a new test session. It first describes the
+software used in RDF before calling L<TAP::Formatter::EARL::Session>.
+
+=item * C<< summary >>
+
+Serializes the model to Turtle and prints it to STDOUT.
+
+=back
+
+
+=head1 TODO
+
+This is a rudimentary first release, it will only make use of data
+parsed from each individual test result.
+
+EARL reports can be extended to become a part of an extensive Linked
+Data cloud. It can also link to tests as formulated by
+e.g. L<Test::FITesque::RDF>.
+
 =head1 BUGS
 
 Please report any bugs to
