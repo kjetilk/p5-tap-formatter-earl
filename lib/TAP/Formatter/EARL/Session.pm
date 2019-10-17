@@ -1,8 +1,8 @@
+package TAP::Formatter::EARL::Session;
+
 use 5.010001;
 use strict;
 use warnings;
-
-package TAP::Formatter::EARL::Session;
 
 our $AUTHORITY = 'cpan:KJETILK';
 our $VERSION   = '0.001';
@@ -42,8 +42,8 @@ has graph_name => (
 						 required => 1
 						);
 
-has result_prefix =>     (is => "ro", isa => Namespace,	coerce => 1, required => 1 );
-has assertion_prefix =>  (is => "ro", isa => Namespace,	coerce => 1, required => 1 );
+has result_prefix =>     (is => "ro", isa => Namespace, coerce => 1, required => 1 );
+has assertion_prefix =>  (is => "ro", isa => Namespace, coerce => 1, required => 1 );
 
 sub result {
   my ($self, $result) = @_;

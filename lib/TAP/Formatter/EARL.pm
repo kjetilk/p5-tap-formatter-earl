@@ -1,8 +1,9 @@
+package TAP::Formatter::EARL;
+
 use 5.010001;
 use strict;
 use warnings;
 
-package TAP::Formatter::EARL;
 
 our $AUTHORITY = 'cpan:KJETILK';
 our $VERSION   = '0.001';
@@ -18,6 +19,7 @@ use Attean::RDF;
 use Types::Attean qw(AtteanIRI to_AtteanIRI);
 use MooX::Attribute::ENV;
 use Types::DateTime -all;
+use Carp qw(croak);
 
 extends qw(
     TAP::Formatter::Console
@@ -114,11 +116,12 @@ sub open_test {
 sub summary {
   my $self = shift;
   my $s = Attean->get_serializer('Turtle')->new(namespaces => $self->ns);
-  open(my $fh, ">-:encoding(UTF-8)");
+  open(my $fh, ">-:encoding(UTF-8)") || croak "Could not open STDOUT";
   if ($self->has_base) {
 	 print $fh '@base <' . $self->base->as_string . "> .\n"; # TODO, the URLs are probably not interpreted as relative
   }
   $s->serialize_iter_to_io( $fh, $self->model->get_quads);
+  close $fh;
 }
 
 1;
